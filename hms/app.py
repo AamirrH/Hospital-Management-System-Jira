@@ -1,6 +1,6 @@
 """Flask application entry point for the Hospital Management System."""
 
-from flask import Flask
+from flask import Flask, render_template
 
 from .db import init_db
 
@@ -12,6 +12,10 @@ def create_app() -> Flask:
     @app.route("/")
     def index() -> str:
         return "Hospital Management System"
+
+    @app.get("/patients/register")
+    def register_patient():
+        return render_template("register_patient.html")
 
     return app
 
