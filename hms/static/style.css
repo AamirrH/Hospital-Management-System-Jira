@@ -49,3 +49,5 @@ button {
 }
 button:hover { background: #10536b; }
 .optional { color: #667085; font-weight: 400; }
+.success-message { padding: 0.75rem; color: #075c32; background: #d9fbe6; border-radius: 6px; }
+.field-error { margin: 0.4rem 0 0; color: #b42318; font-size: 0.9rem; }

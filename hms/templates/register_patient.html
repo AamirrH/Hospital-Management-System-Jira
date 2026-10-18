@@ -7,40 +7,45 @@
     <h1 id="page-title">Register a New Patient</h1>
     <p class="intro">Enter the patient's details below.</p>
 
+    {% if success_message %}
+        <p class="success-message" role="status">{{ success_message }}</p>
+    {% endif %}
+
     <form method="post" action="{{ url_for('register_patient') }}">
         <div class="form-field">
             <label for="name">Name</label>
-            <input id="name" name="name" type="text">
+            <input id="name" name="name" type="text" value="{{ form_data.name }}">
         </div>
 
         <div class="form-field">
             <label for="age">Age</label>
-            <input id="age" name="age" type="number">
+            <input id="age" name="age" type="number" value="{{ form_data.age }}">
         </div>
 
         <div class="form-field">
             <label for="gender">Gender</label>
             <select id="gender" name="gender">
                 <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="Male" {% if form_data.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if form_data.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if form_data.gender == 'Other' %}selected{% endif %}>Other</option>
             </select>
         </div>
 
         <div class="form-field">
             <label for="phone">Phone</label>
-            <input id="phone" name="phone" type="tel">
+            <input id="phone" name="phone" type="tel" value="{{ form_data.phone }}">
+            {% if errors and errors.phone %}<p class="field-error">{{ errors.phone }}</p>{% endif %}
         </div>
 
         <div class="form-field">
             <label for="email">Email <span class="optional">(optional)</span></label>
-            <input id="email" name="email" type="email">
+            <input id="email" name="email" type="email" value="{{ form_data.email }}">
         </div>
 
         <div class="form-field">
             <label for="address">Address</label>
-            <textarea id="address" name="address" rows="4"></textarea>
+            <textarea id="address" name="address" rows="4">{{ form_data.address }}</textarea>
         </div>
 
         <button type="submit">Register Patient</button>
