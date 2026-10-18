@@ -5,6 +5,7 @@ import sqlite3
 from flask import Flask, render_template, request
 
 from .db import get_db, init_db
+from .validators import normalize_patient_data, validate_patient
 
 
 def create_app() -> Flask:
@@ -27,7 +28,18 @@ def create_app() -> Flask:
         }
 
         if request.method == "POST":
-            form_data.update({field: request.form.get(field, "") for field in form_data})
+            form_data = normalize_patient_data(request.form)
+            with get_db() as connection:
+                phone_exists = connection.execute(
+                    "SELECT 1 FROM patients WHERE phone = ?", (form_data["phone"],)
+                ).fetchone() is not None
+
+            errors = validate_patient(form_data, phone_exists=phone_exists)
+            if errors:
+                return render_template(
+                    "register_patient.html", form_data=form_data, errors=errors
+                )
+
             try:
                 with get_db() as connection:
                     cursor = connection.execute(
