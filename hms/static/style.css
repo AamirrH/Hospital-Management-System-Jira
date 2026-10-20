@@ -64,3 +64,11 @@ button:hover { background: #10536b; }
 .optional { color: #667085; font-weight: 400; }
 .success-message { padding: 0.75rem; color: #075c32; background: #d9fbe6; border-radius: 6px; }
 .field-error { margin: 0.4rem 0 0; color: #b42318; font-size: 0.9rem; }
+
+.search-card { width: min(100%, 1100px); }
+.search-results { margin-top: 2rem; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.75rem; border-bottom: 1px solid #d8e1e7; text-align: left; }
+th { color: #fff; background: #176b87; }
+.empty-message { margin: 0; padding: 1rem; color: #52616b; background: #f4f7f9; border-radius: 6px; }

@@ -3,7 +3,7 @@
 {% block title %}Search Patients | HMS{% endblock %}
 
 {% block content %}
-<section class="card" aria-labelledby="page-title">
+<section class="card search-card" aria-labelledby="page-title">
     <h1 id="page-title">Search Patients</h1>
     <p class="intro">Enter a Patient ID, a name, or both.</p>
 
@@ -20,5 +20,42 @@
 
         <button type="submit">Search</button>
     </form>
+
+    {% if search_performed %}
+        <div class="search-results" aria-live="polite">
+            {% if results %}
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in results %}
+                                <tr>
+                                    <td>{{ patient.patient_id }}</td>
+                                    <td>{{ patient.name }}</td>
+                                    <td>{{ patient.age }}</td>
+                                    <td>{{ patient.gender }}</td>
+                                    <td>{{ patient.phone }}</td>
+                                    <td>{{ patient.email or "—" }}</td>
+                                    <td>{{ patient.address }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-message">No patients found.</p>
+            {% endif %}
+        </div>
+    {% endif %}
 </section>
 {% endblock %}

@@ -23,6 +23,33 @@ def init_db(db_path: str | Path | None = None) -> None:
         connection.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
+def search_patients(
+    patient_id: str = "", name: str = "", db_path: str | Path | None = None
+) -> list[sqlite3.Row]:
+    """Return patients matching the supplied ID and name filters."""
+    clauses: list[str] = []
+    parameters: list[str] = []
+
+    if patient_id:
+        clauses.append("patient_id = ?")
+        parameters.append(patient_id)
+
+    if name:
+        clauses.append("instr(name, ?) > 0")
+        parameters.append(name)
+
+    query = """
+        SELECT patient_id, name, age, gender, phone, email, address
+        FROM patients
+    """
+    if clauses:
+        query += " WHERE " + " AND ".join(clauses)
+    query += " ORDER BY patient_id"
+
+    with get_db(db_path) as connection:
+        return connection.execute(query, parameters).fetchall()
+
+
 if __name__ == "__main__":
     init_db()
     print(f"Database initialized at {DATABASE_PATH}")
