@@ -70,6 +70,12 @@ def create_app() -> Flask:
 
         return render_template("register_patient.html", form_data=form_data)
 
+    @app.route("/patients/search")
+    def search_patient():
+        return render_template(
+            "search_patient.html", form_data={"patient_id": "", "name": ""}
+        )
+
     return app
 
 

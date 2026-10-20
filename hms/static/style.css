@@ -8,9 +8,22 @@
 
 body { margin: 0; }
 
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    color: #fff;
+    background: #176b87;
+}
+.site-header a { color: #fff; text-decoration: none; }
+.site-header nav { display: flex; gap: 1rem; }
+.site-name { font-weight: 700; }
+
 .page-shell {
     display: grid;
-    min-height: 100vh;
+    min-height: calc(100vh - 58px);
     place-items: center;
     padding: 2rem 1rem;
 }

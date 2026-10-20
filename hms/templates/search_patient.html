@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Search Patients | HMS{% endblock %}
+
+{% block content %}
+<section class="card" aria-labelledby="page-title">
+    <h1 id="page-title">Search Patients</h1>
+    <p class="intro">Enter a Patient ID, a name, or both.</p>
+
+    <form method="get" action="{{ url_for('search_patient') }}">
+        <div class="form-field">
+            <label for="patient_id">Patient ID</label>
+            <input id="patient_id" name="patient_id" type="number" min="1" step="1" value="{{ form_data.patient_id }}">
+        </div>
+
+        <div class="form-field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" minlength="2" maxlength="50" value="{{ form_data.name }}">
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+</section>
+{% endblock %}
