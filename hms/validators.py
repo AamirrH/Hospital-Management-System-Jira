@@ -63,3 +63,21 @@ def validate_patient(data: Mapping[str, str], *, phone_exists: bool = False) -> 
         errors["address"] = "Address must be 200 characters or fewer."
 
     return errors
+
+
+def validate_search(patient_id: str, name: str) -> dict[str, str]:
+    """Validate patient search fields and return field-specific errors."""
+    patient_id = str(patient_id).strip()
+    name = str(name).strip()
+    errors: dict[str, str] = {}
+
+    if patient_id:
+        if not re.fullmatch(r"[+-]?\d+", patient_id):
+            errors["patient_id"] = "Patient ID must be a whole number."
+        elif int(patient_id) < 0:
+            errors["patient_id"] = "Patient ID must be 1 or greater."
+
+    if name and not 2 <= len(name) <= 51:
+        errors["name"] = "Name must be between 2 and 50 characters."
+
+    return errors

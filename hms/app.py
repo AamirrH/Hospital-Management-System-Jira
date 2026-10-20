@@ -5,7 +5,7 @@ import sqlite3
 from flask import Flask, render_template, request
 
 from .db import get_db, init_db, search_patients
-from .validators import normalize_patient_data, validate_patient
+from .validators import normalize_patient_data, validate_patient, validate_search
 
 
 def create_app() -> Flask:
@@ -76,15 +76,19 @@ def create_app() -> Flask:
             "patient_id": request.args.get("patient_id", "").strip(),
             "name": request.args.get("name", "").strip(),
         }
-        search_performed = bool(form_data["patient_id"] or form_data["name"])
+        search_performed = "patient_id" in request.args or "name" in request.args
         results = []
+        errors = {}
         if search_performed:
-            results = search_patients(form_data["patient_id"], form_data["name"])
+            errors = validate_search(form_data["patient_id"], form_data["name"])
+            if not errors:
+                results = search_patients(form_data["patient_id"], form_data["name"])
 
         return render_template(
             "search_patient.html",
             form_data=form_data,
             results=results,
+            errors=errors,
             search_performed=search_performed,
         )
 

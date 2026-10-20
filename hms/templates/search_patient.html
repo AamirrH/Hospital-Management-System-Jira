@@ -11,11 +11,13 @@
         <div class="form-field">
             <label for="patient_id">Patient ID</label>
             <input id="patient_id" name="patient_id" type="number" min="1" step="1" value="{{ form_data.patient_id }}">
+            {% if errors and errors.patient_id %}<p class="field-error">{{ errors.patient_id }}</p>{% endif %}
         </div>
 
         <div class="form-field">
             <label for="name">Name</label>
             <input id="name" name="name" type="text" minlength="2" maxlength="50" value="{{ form_data.name }}">
+            {% if errors and errors.name %}<p class="field-error">{{ errors.name }}</p>{% endif %}
         </div>
 
         <button type="submit">Search</button>
