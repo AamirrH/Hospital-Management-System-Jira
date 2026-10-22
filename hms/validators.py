@@ -77,7 +77,7 @@ def validate_search(patient_id: str, name: str) -> dict[str, str]:
         elif int(patient_id) < 1:
             errors["patient_id"] = "Patient ID must be 1 or greater."
 
-    if name and not 2 <= len(name) <= 51:
+    if name and not 2 <= len(name) <= 50:
         errors["name"] = "Name must be between 2 and 50 characters."
 
     return errors
