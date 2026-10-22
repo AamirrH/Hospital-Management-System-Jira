@@ -10,6 +10,8 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 
 ## BUG-S9-01: Patient ID 0 is accepted as a valid search criterion
 
+- **Status:** Resolved and verified by TC-S12
+- **Fix commit:** `9227eff` (`SCRUM-9 reject zero patient ID in search`)
 - **Severity:** Major
 - **Priority:** High
 - **Description:** Server-side search validation accepts Patient ID `0`, although valid IDs must be whole numbers greater than or equal to 1. The request proceeds to a search and displays the no-match message instead of a validation error.
@@ -22,9 +24,12 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 - **Related test case ID:** TC-S12
 - **Story:** SCRUM-9
 - **Screenshot:** `docs/screenshots/BUG_TC-S12_zero-id-accepted.png`
+- **Resolution evidence:** `docs/screenshots/FIXED_TC-S12_zero-id-rejected.png`
 
 ## BUG-S9-02: A 51-character name is accepted by server-side validation
 
+- **Status:** Resolved and verified by TC-S18
+- **Fix commit:** `37f0d47` (`SCRUM-9 enforce patient search name length limit`)
 - **Severity:** Minor
 - **Priority:** Medium
 - **Description:** Server-side name validation permits 51 characters even though the allowed maximum after trimming is 50 characters.
@@ -37,9 +42,12 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 - **Related test case ID:** TC-S18
 - **Story:** SCRUM-9
 - **Screenshot:** `docs/screenshots/BUG_TC-S18_name-51-accepted.png`
+- **Resolution evidence:** `docs/screenshots/FIXED_TC-S18_name-51-rejected.png`
 
 ## BUG-S9-03: Empty search criteria return every patient
 
+- **Status:** Resolved and verified by TC-S19 and TC-S20
+- **Fix commit:** `4d4b214` (`SCRUM-9 require patient search criteria`)
 - **Severity:** Major
 - **Priority:** High
 - **Description:** When both search fields are empty after trimming, validation does not require at least one criterion. The unfiltered query returns all six patient records.
@@ -53,9 +61,12 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 - **Related test case IDs:** TC-S19, TC-S20
 - **Story:** SCRUM-9
 - **Screenshots:** `docs/screenshots/BUG_TC-S19_empty-search-returns-all.png`, `docs/screenshots/BUG_TC-S20_whitespace-search-returns-all.png`
+- **Resolution evidence:** `docs/screenshots/FIXED_TC-S19_empty-search-rejected.png`, `docs/screenshots/FIXED_TC-S20_whitespace-search-rejected.png`
 
 ## BUG-S9-04: Name search is case-sensitive
 
+- **Status:** Resolved and verified by TC-S22, TC-S23, and TC-S24
+- **Fix commit:** `a8bb155` (`SCRUM-9 fix case-insensitive patient name search`)
 - **Severity:** Major
 - **Priority:** High
 - **Description:** Partial-name search compares case exactly, so differently cased queries do not return every matching record. With seeded records `Ravi Kumar` and `ravi singh`, all casing variants should return both rows.
@@ -69,3 +80,8 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 - **Related test case IDs:** TC-S22, TC-S23, TC-S24
 - **Story:** SCRUM-9
 - **Screenshots:** `docs/screenshots/BUG_TC-S22_lowercase-search-case-sensitive.png`, `docs/screenshots/BUG_TC-S23_uppercase-search-case-sensitive.png`, `docs/screenshots/BUG_TC-S24_titlecase-search-case-sensitive.png`
+- **Resolution evidence:** `docs/screenshots/FIXED_TC-S22_lowercase-search.png`, `docs/screenshots/FIXED_TC-S23_uppercase-search.png`, `docs/screenshots/FIXED_TC-S24_titlecase-search.png`
+
+## Resolution verification
+
+The full automated suite completed with 57 passed and 0 failed. Console evidence is saved as `docs/screenshots/TEST_RUN_all-57-tests-passing.png` and `docs/screenshots/TEST_RUN_summary-57-passed.png`.
