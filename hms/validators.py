@@ -71,6 +71,9 @@ def validate_search(patient_id: str, name: str) -> dict[str, str]:
     name = str(name).strip()
     errors: dict[str, str] = {}
 
+    if not patient_id and not name:
+        errors["form"] = "Enter a Patient ID or name."
+
     if patient_id:
         if not re.fullmatch(r"[+-]?\d+", patient_id):
             errors["patient_id"] = "Patient ID must be a whole number."
