@@ -35,7 +35,7 @@ def search_patients(
         parameters.append(patient_id)
 
     if name:
-        clauses.append("instr(name, ?) > 0")
+        clauses.append("instr(lower(name), lower(?)) > 0")
         parameters.append(name)
 
     query = """
