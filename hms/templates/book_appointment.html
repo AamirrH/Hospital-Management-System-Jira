@@ -7,6 +7,18 @@
     <h1 id="page-title">Book an Appointment</h1>
     <p class="intro">Choose a doctor, date, and available time slot.</p>
 
+    {% if errors and errors.form %}<p class="field-error">{{ errors.form }}</p>{% endif %}
+
+    {% if confirmation %}
+        <div class="success-message" role="status">
+            <p><strong>Appointment booked successfully. Appointment ID: {{ confirmation.appointment_id }}</strong></p>
+            <p>Patient: {{ confirmation.patient_name or "" }}</p>
+            <p>Doctor: {{ confirmation.doctor_name or "" }}{% if confirmation.specialization %} - {{ confirmation.specialization }}{% endif %}</p>
+            <p>Date: {{ confirmation.appointment_date }}</p>
+            <p>Time: {{ confirmation.time_slot }}</p>
+        </div>
+    {% endif %}
+
     <form method="post" action="{{ url_for('book_appointment') }}">
         <div class="form-field">
             <label for="patient_id">Patient ID</label>

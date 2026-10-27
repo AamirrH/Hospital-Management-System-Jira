@@ -4,7 +4,14 @@ import sqlite3
 
 from flask import Flask, render_template, request
 
-from .db import get_db, get_doctors, init_db, search_patients
+from .db import (
+    create_appointment,
+    get_appointment_confirmation,
+    get_db,
+    get_doctors,
+    init_db,
+    search_patients,
+)
 from .validators import normalize_patient_data, validate_patient, validate_search
 
 
@@ -99,7 +106,7 @@ def create_app() -> Flask:
             search_performed=search_performed,
         )
 
-    @app.route("/appointments/book")
+    @app.route("/appointments/book", methods=["GET", "POST"])
     def book_appointment():
         form_data = {
             "patient_id": "",
@@ -108,11 +115,33 @@ def create_app() -> Flask:
             "time_slot": "",
             "reason": "",
         }
+        errors = {}
+        confirmation = None
+
+        if request.method == "POST":
+            form_data = {
+                field: request.form.get(field, "").strip()
+                for field in form_data
+            }
+            try:
+                appointment_id = create_appointment(
+                    form_data["patient_id"],
+                    form_data["doctor_id"],
+                    form_data["appointment_date"],
+                    form_data["time_slot"],
+                    form_data["reason"],
+                )
+                confirmation = get_appointment_confirmation(appointment_id)
+            except sqlite3.DatabaseError:
+                errors["form"] = "Unable to book the appointment. Please try again."
+
         return render_template(
             "book_appointment.html",
             form_data=form_data,
             doctors=get_doctors(),
             time_slots=TIME_SLOTS,
+            errors=errors,
+            confirmation=confirmation,
         )
 
     return app

@@ -35,6 +35,51 @@ def get_doctors(db_path: str | Path | None = None) -> list[sqlite3.Row]:
         ).fetchall()
 
 
+def create_appointment(
+    patient_id: str,
+    doctor_id: str,
+    appointment_date: str,
+    time_slot: str,
+    reason: str,
+    db_path: str | Path | None = None,
+) -> int:
+    """Insert an appointment and return its generated ID."""
+    with get_db(db_path) as connection:
+        cursor = connection.execute(
+            """
+            INSERT INTO appointments (
+                patient_id, doctor_id, appointment_date, time_slot, reason
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (patient_id, doctor_id, appointment_date, time_slot, reason),
+        )
+        return int(cursor.lastrowid)
+
+
+def get_appointment_confirmation(
+    appointment_id: int, db_path: str | Path | None = None
+) -> sqlite3.Row | None:
+    """Return confirmation details for one appointment."""
+    with get_db(db_path) as connection:
+        return connection.execute(
+            """
+            SELECT
+                a.appointment_id,
+                p.name AS patient_name,
+                d.name AS doctor_name,
+                d.specialization,
+                a.appointment_date,
+                a.time_slot
+            FROM appointments AS a
+            LEFT JOIN patients AS p ON p.patient_id = a.patient_id
+            LEFT JOIN doctors AS d ON d.doctor_id = a.doctor_id
+            WHERE a.appointment_id = ?
+            """,
+            (appointment_id,),
+        ).fetchone()
+
+
 def search_patients(
     patient_id: str = "", name: str = "", db_path: str | Path | None = None
 ) -> list[sqlite3.Row]:
