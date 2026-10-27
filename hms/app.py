@@ -4,8 +4,15 @@ import sqlite3
 
 from flask import Flask, render_template, request
 
-from .db import get_db, init_db, search_patients
+from .db import get_db, get_doctors, init_db, search_patients
 from .validators import normalize_patient_data, validate_patient, validate_search
+
+
+TIME_SLOTS = [
+    f"{hour:02d}:{minute:02d}"
+    for hour in range(9, 17)
+    for minute in (0, 30)
+]
 
 
 def create_app() -> Flask:
@@ -90,6 +97,22 @@ def create_app() -> Flask:
             results=results,
             errors=errors,
             search_performed=search_performed,
+        )
+
+    @app.route("/appointments/book")
+    def book_appointment():
+        form_data = {
+            "patient_id": "",
+            "doctor_id": "",
+            "appointment_date": "",
+            "time_slot": "",
+            "reason": "",
+        }
+        return render_template(
+            "book_appointment.html",
+            form_data=form_data,
+            doctors=get_doctors(),
+            time_slots=TIME_SLOTS,
         )
 
     return app
