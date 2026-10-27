@@ -1,10 +1,12 @@
 """Flask application entry point for the Hospital Management System."""
 
 import sqlite3
+from datetime import date
 
 from flask import Flask, render_template, request
 
 from .db import (
+    appointment_slot_taken,
     create_appointment,
     get_appointment_confirmation,
     get_db,
@@ -12,7 +14,13 @@ from .db import (
     init_db,
     search_patients,
 )
-from .validators import normalize_patient_data, validate_patient, validate_search
+from .validators import (
+    normalize_appointment_data,
+    normalize_patient_data,
+    validate_appointment,
+    validate_patient,
+    validate_search,
+)
 
 
 TIME_SLOTS = [
@@ -108,6 +116,7 @@ def create_app() -> Flask:
 
     @app.route("/appointments/book", methods=["GET", "POST"])
     def book_appointment():
+        doctors = get_doctors()
         form_data = {
             "patient_id": "",
             "doctor_id": "",
@@ -119,27 +128,41 @@ def create_app() -> Flask:
         confirmation = None
 
         if request.method == "POST":
-            form_data = {
-                field: request.form.get(field, "").strip()
-                for field in form_data
-            }
-            try:
-                appointment_id = create_appointment(
-                    form_data["patient_id"],
-                    form_data["doctor_id"],
-                    form_data["appointment_date"],
-                    form_data["time_slot"],
-                    form_data["reason"],
+            form_data = normalize_appointment_data(request.form)
+            errors = validate_appointment(
+                form_data,
+                valid_doctor_ids={str(doctor["doctor_id"]) for doctor in doctors},
+                valid_time_slots=set(TIME_SLOTS),
+                today=date.today(),
+            )
+            if not errors and appointment_slot_taken(
+                form_data["doctor_id"], form_data["time_slot"]
+            ):
+                errors["time_slot"] = (
+                    "This doctor is already booked for the selected date and time."
                 )
-                confirmation = get_appointment_confirmation(appointment_id)
-            except sqlite3.DatabaseError:
-                errors["form"] = "Unable to book the appointment. Please try again."
+
+            if not errors:
+                try:
+                    appointment_id = create_appointment(
+                        form_data["patient_id"],
+                        form_data["doctor_id"],
+                        form_data["appointment_date"],
+                        form_data["time_slot"],
+                        form_data["reason"],
+                    )
+                    confirmation = get_appointment_confirmation(appointment_id)
+                except sqlite3.DatabaseError:
+                    errors["form"] = (
+                        "Unable to book the appointment. Please try again."
+                    )
 
         return render_template(
             "book_appointment.html",
             form_data=form_data,
-            doctors=get_doctors(),
+            doctors=doctors,
             time_slots=TIME_SLOTS,
+            min_date=date.today().isoformat(),
             errors=errors,
             confirmation=confirmation,
         )

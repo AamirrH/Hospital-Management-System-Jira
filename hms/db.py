@@ -80,6 +80,24 @@ def get_appointment_confirmation(
         ).fetchone()
 
 
+def appointment_slot_taken(
+    doctor_id: str,
+    time_slot: str,
+    db_path: str | Path | None = None,
+) -> bool:
+    """Return whether the selected doctor already has the requested slot."""
+    with get_db(db_path) as connection:
+        return connection.execute(
+            """
+            SELECT 1
+            FROM appointments
+            WHERE doctor_id = ? AND time_slot = ?
+            LIMIT 1
+            """,
+            (doctor_id, time_slot),
+        ).fetchone() is not None
+
+
 def search_patients(
     patient_id: str = "", name: str = "", db_path: str | Path | None = None
 ) -> list[sqlite3.Row]:
