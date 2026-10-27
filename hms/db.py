@@ -23,6 +23,18 @@ def init_db(db_path: str | Path | None = None) -> None:
         connection.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
+def get_doctors(db_path: str | Path | None = None) -> list[sqlite3.Row]:
+    """Return all doctors ordered by name."""
+    with get_db(db_path) as connection:
+        return connection.execute(
+            """
+            SELECT doctor_id, name, specialization
+            FROM doctors
+            ORDER BY name
+            """
+        ).fetchall()
+
+
 def search_patients(
     patient_id: str = "", name: str = "", db_path: str | Path | None = None
 ) -> list[sqlite3.Row]:
