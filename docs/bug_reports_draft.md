@@ -85,3 +85,88 @@ The five manual UI test cases in the test-case workbook remain pending manual ex
 ## Resolution verification
 
 The full automated suite completed with 57 passed and 0 failed. Console evidence is saved as `docs/screenshots/TEST_RUN_all-57-tests-passing.png` and `docs/screenshots/TEST_RUN_summary-57-passed.png`.
+
+---
+
+# SCRUM-11 Appointment Scheduling Bug Report Drafts
+
+## BUG-S11-01: Yesterday is accepted as an appointment date
+
+- **Severity:** Major
+- **Priority:** High
+- **Description:** Server-side date validation accepts yesterday even though appointments must be scheduled for today or a future date.
+- **Steps to reproduce:**
+  1. Start the HMS application with an initialized temporary database containing Patient ID `1`.
+  2. Open `/appointments/book`.
+  3. Enter Patient ID `1`, Doctor `Dr. Mehta`, Appointment date `2026-10-29`, Time slot `12:30`, and Reason `Routine consultation`.
+  4. Submit the form.
+- **Expected result:** The form shows `Appointment date cannot be in the past.` and no appointment row is inserted.
+- **Actual result:** The booking is accepted, a success confirmation is displayed, and an appointment row is inserted for `2026-10-29`.
+- **Related test case IDs:** TC-A06, TC-W05
+- **Story:** SCRUM-11
+- **Screenshot:** `docs/screenshots/BUG_TC-A06_yesterday-accepted.png`
+
+## BUG-S11-02: A 201-character reason is accepted
+
+- **Severity:** Minor
+- **Priority:** Medium
+- **Description:** Server-side validation permits a Reason containing 201 characters although the maximum is 200.
+- **Steps to reproduce:**
+  1. Start the HMS application with an initialized temporary database containing Patient ID `1`.
+  2. Open `/appointments/book`.
+  3. Enter Patient ID `1`, Doctor `Dr. Mehta`, Appointment date `2026-11-09`, Time slot `15:00`, and a Reason containing exactly 201 `R` characters.
+  4. Submit the form with browser-side `maxlength` enforcement bypassed so server validation is exercised.
+- **Expected result:** The form shows `Reason must be 200 characters or fewer.` and no appointment row is inserted.
+- **Actual result:** The booking is accepted, confirmation is displayed, and the 201-character reason is inserted.
+- **Related test case IDs:** TC-A11, TC-W08
+- **Story:** SCRUM-11
+- **Screenshot:** `docs/screenshots/BUG_TC-A11_reason-201-accepted.png`
+
+## BUG-S11-03: Appointment can be booked for an unknown patient
+
+- **Severity:** Major
+- **Priority:** High
+- **Description:** The booking flow does not verify that Patient ID exists before inserting the appointment.
+- **Steps to reproduce:**
+  1. Initialize a temporary database containing only Patient IDs `1`, `2`, and `3`.
+  2. Open `/appointments/book`.
+  3. Enter Patient ID `9999`, Doctor `Dr. Rao`, Appointment date `2026-11-09`, Time slot `09:30`, and Reason `Routine consultation`.
+  4. Submit the form.
+- **Expected result:** A clear patient-not-found error is shown and no appointment row is inserted.
+- **Actual result:** An appointment row is inserted for Patient ID `9999`; the confirmation is shown with a blank patient name.
+- **Related test case IDs:** TC-A14, TC-W17
+- **Story:** SCRUM-11
+- **Screenshot:** `docs/screenshots/BUG_TC-A14_unknown-patient-booked.png`
+
+## BUG-S11-04: Same doctor and time on a different date is wrongly rejected
+
+- **Severity:** Major
+- **Priority:** High
+- **Description:** The conflict check considers only doctor and time slot, so it treats appointments on different dates as conflicts.
+- **Steps to reproduce:**
+  1. Start the HMS application with Patient IDs `1` and `2`.
+  2. Book Patient ID `1` with `Dr. Iyer` on `2026-11-20` at `12:30`.
+  3. Book Patient ID `2` with `Dr. Iyer` on `2026-11-21` at `12:30`.
+- **Expected result:** Both bookings succeed because their dates differ.
+- **Actual result:** The second booking is rejected with `This doctor is already booked for the selected date and time.` and only one row exists.
+- **Related test case IDs:** TC-A21, TC-W15
+- **Story:** SCRUM-11
+- **Screenshot:** `docs/screenshots/BUG_TC-A21_cross-date-slot-rejected.png`
+
+## BUG-S11-05: Invalid values are not retained after validation errors
+
+- **Severity:** Minor
+- **Priority:** Medium
+- **Description:** The server correctly rejects several malformed values, but the corresponding HTML controls reset them to blank when the form is re-rendered. This violates the requirement to keep entered values with validation errors.
+- **Steps to reproduce:**
+  1. Open `/appointments/book` and submit Patient ID `1`, Doctor `Dr. Mehta`, date `not-a-date`, Time slot `13:00`, and Reason `Routine consultation` by bypassing the browser date control.
+  2. Observe that the invalid-date error appears but the date field is blank.
+  3. Repeat with Patient ID `abc`, Doctor `Dr. Rao`, date `2026-11-09`, and Time slot `10:30`.
+  4. Observe that the whole-number error appears but the Patient ID field is blank.
+  5. Repeat with Patient ID `1`, Doctor ID `999`, date `2026-11-09`, and Time slot `14:30`.
+  6. Observe that the invalid-doctor error appears but the Doctor dropdown resets to its blank option.
+- **Expected result:** Each error is shown and the exact entered value remains visible in its field; no appointment is inserted.
+- **Actual result:** Each error is shown and no appointment is inserted, but `not-a-date`, `abc`, and Doctor ID `999` are cleared on re-render.
+- **Related test case IDs:** TC-A07, TC-A16, TC-A25
+- **Story:** SCRUM-11
+- **Screenshots:** `docs/screenshots/BUG_TC-A07_invalid-date-not-retained.png`, `docs/screenshots/BUG_TC-A16_text-patient-id-not-retained.png`, `docs/screenshots/BUG_TC-A25_invalid-doctor-not-retained.png`

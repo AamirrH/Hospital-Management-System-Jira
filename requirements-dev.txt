@@ -1,3 +1,5 @@
 pytest
 pytest-playwright
+pytest-cov
 openpyxl
+Pillow

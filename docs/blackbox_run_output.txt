@@ -1,0 +1,102 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.2.0, pluggy-1.7.0 -- D:\Hospital Management Jira Project\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Hospital Management Jira Project
+plugins: cov-7.1.0, playwright-0.10.0
+collecting ... collected 25 items
+
+tests/test_appointment_booking_ui.py::test_tc_a01_booking_page_loads_with_seeded_dropdowns[chromium] PASSED [  4%]
+tests/test_appointment_booking_ui.py::test_tc_a02_valid_booking_confirms_and_inserts_exact_row[chromium] PASSED [  8%]
+tests/test_appointment_booking_ui.py::test_tc_a03_appointment_id_increments[chromium] PASSED [ 12%]
+tests/test_appointment_booking_ui.py::test_tc_a04_today_date_boundary_is_accepted[chromium] PASSED [ 16%]
+tests/test_appointment_booking_ui.py::test_tc_a05_tomorrow_date_is_accepted[chromium] PASSED [ 20%]
+tests/test_appointment_booking_ui.py::test_tc_a06_yesterday_date_is_rejected[chromium] FAILED [ 24%]
+tests/test_appointment_booking_ui.py::test_tc_a07_invalid_date_format_is_rejected[chromium] FAILED [ 28%]
+tests/test_appointment_booking_ui.py::test_tc_a08_empty_optional_reason_is_accepted[chromium] PASSED [ 32%]
+tests/test_appointment_booking_ui.py::test_tc_a09_one_character_reason_is_accepted[chromium] PASSED [ 36%]
+tests/test_appointment_booking_ui.py::test_tc_a10_two_hundred_character_reason_is_accepted[chromium] PASSED [ 40%]
+tests/test_appointment_booking_ui.py::test_tc_a11_two_hundred_one_character_reason_is_rejected[chromium] FAILED [ 44%]
+tests/test_appointment_booking_ui.py::test_tc_a12_first_time_slot_boundary_is_accepted[chromium] PASSED [ 48%]
+tests/test_appointment_booking_ui.py::test_tc_a13_last_time_slot_boundary_is_accepted[chromium] PASSED [ 52%]
+tests/test_appointment_booking_ui.py::test_tc_a14_unknown_patient_id_is_rejected[chromium] FAILED [ 56%]
+tests/test_appointment_booking_ui.py::test_tc_a15_empty_patient_id_is_rejected_and_retained[chromium] PASSED [ 60%]
+tests/test_appointment_booking_ui.py::test_tc_a16_text_patient_id_is_rejected_and_retained[chromium] FAILED [ 64%]
+tests/test_appointment_booking_ui.py::test_tc_a17_missing_doctor_is_rejected_and_retained[chromium] PASSED [ 68%]
+tests/test_appointment_booking_ui.py::test_tc_a18_missing_time_slot_is_rejected_and_retained[chromium] PASSED [ 72%]
+tests/test_appointment_booking_ui.py::test_tc_a19_missing_date_is_rejected_and_retained[chromium] PASSED [ 76%]
+tests/test_appointment_booking_ui.py::test_tc_a20_same_doctor_date_and_slot_is_rejected[chromium] PASSED [ 80%]
+tests/test_appointment_booking_ui.py::test_tc_a21_same_doctor_slot_on_different_date_is_allowed[chromium] FAILED [ 84%]
+tests/test_appointment_booking_ui.py::test_tc_a22_different_doctor_same_date_and_slot_is_allowed[chromium] PASSED [ 88%]
+tests/test_appointment_booking_ui.py::test_tc_a23_registered_patient_can_book_and_name_matches[chromium] PASSED [ 92%]
+tests/test_appointment_booking_ui.py::test_tc_a24_sql_injection_reason_is_stored_safely[chromium] PASSED [ 96%]
+tests/test_appointment_booking_ui.py::test_tc_a25_invalid_doctor_value_is_rejected[chromium] FAILED [100%]
+
+================================== FAILURES ===================================
+______________ test_tc_a06_yesterday_date_is_rejected[chromium] _______________
+tests\test_appointment_booking_ui.py:267: in test_tc_a06_yesterday_date_is_rejected
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: Yesterday was accepted and inserted instead of being rejected.
+E   assert False
+____________ test_tc_a07_invalid_date_format_is_rejected[chromium] ____________
+tests\test_appointment_booking_ui.py:280: in test_tc_a07_invalid_date_format_is_rejected
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: The invalid date was rejected but the entered value was not retained.
+E   assert False
+_____ test_tc_a11_two_hundred_one_character_reason_is_rejected[chromium] ______
+tests\test_appointment_booking_ui.py:315: in test_tc_a11_two_hundred_one_character_reason_is_rejected
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: A 201-character reason was accepted and inserted.
+E   assert False
+____________ test_tc_a14_unknown_patient_id_is_rejected[chromium] _____________
+tests\test_appointment_booking_ui.py:340: in test_tc_a14_unknown_patient_id_is_rejected
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: An appointment was inserted for an unregistered Patient ID.
+E   assert False
+_______ test_tc_a16_text_patient_id_is_rejected_and_retained[chromium] ________
+tests\test_appointment_booking_ui.py:362: in test_tc_a16_text_patient_id_is_rejected_and_retained
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: The text Patient ID was rejected but the entered value was not retained.
+E   assert False
+_____ test_tc_a21_same_doctor_slot_on_different_date_is_allowed[chromium] _____
+tests\test_appointment_booking_ui.py:410: in test_tc_a21_same_doctor_slot_on_different_date_is_allowed
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: A valid booking on a different date was rejected as a conflict.
+E   assert False
+___________ test_tc_a25_invalid_doctor_value_is_rejected[chromium] ____________
+tests\test_appointment_booking_ui.py:461: in test_tc_a25_invalid_doctor_value_is_rejected
+    assert_with_evidence(
+tests\test_appointment_booking_ui.py:197: in assert_with_evidence
+    assert condition, message
+E   AssertionError: The invalid doctor value was rejected but the entered value was not retained.
+E   assert False
+============================== warnings summary ===============================
+tests/test_appointment_booking_ui.py::test_tc_a01_booking_page_loads_with_seeded_dropdowns[chromium]
+  D:\Hospital Management Jira Project\venv\Lib\site-packages\_pytest\fixtures.py:1392: PytestRemovedIn10Warning: Session-scoped fixtures defined as instance methods are deprecated.
+  Instance attributes set in the 'base_url' fixture will NOT be visible to test methods,
+  as each test gets a new instance while the fixture runs only once per class.
+  Use a @classmethod decorator below @pytest.fixture and set attributes on cls instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#class-scoped-fixture-as-instance-method
+    fixturefunc = resolve_fixture_function(fixturedef, request)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_appointment_booking_ui.py::test_tc_a06_yesterday_date_is_rejected[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a07_invalid_date_format_is_rejected[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a11_two_hundred_one_character_reason_is_rejected[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a14_unknown_patient_id_is_rejected[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a16_text_patient_id_is_rejected_and_retained[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a21_same_doctor_slot_on_different_date_is_allowed[chromium]
+FAILED tests/test_appointment_booking_ui.py::test_tc_a25_invalid_doctor_value_is_rejected[chromium]
+================== 7 failed, 18 passed, 1 warning in 19.51s ===================

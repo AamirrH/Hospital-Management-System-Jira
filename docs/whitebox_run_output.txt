@@ -1,0 +1,52 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.2.0, pluggy-1.7.0 -- D:\Hospital Management Jira Project\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Hospital Management Jira Project
+plugins: cov-7.1.0, playwright-0.10.0
+collecting ... collected 18 items
+
+tests/test_appointment_booking_unit.py::test_tc_w01_normalize_appointment_data_trims_and_fills_missing_fields PASSED [  5%]
+tests/test_appointment_booking_unit.py::test_tc_w02_valid_appointment_accepts_today_and_future_dates PASSED [ 11%]
+tests/test_appointment_booking_unit.py::test_tc_w03_patient_id_validation_exercises_required_format_and_lower_bound PASSED [ 16%]
+tests/test_appointment_booking_unit.py::test_tc_w04_doctor_validation_exercises_required_and_membership_branches PASSED [ 22%]
+tests/test_appointment_booking_unit.py::test_tc_w05_date_validation_exercises_required_invalid_and_past_branches FAILED [ 27%]
+tests/test_appointment_booking_unit.py::test_tc_w06_time_slot_validation_exercises_required_and_membership_branches PASSED [ 33%]
+tests/test_appointment_booking_unit.py::test_tc_w07_reason_boundaries_zero_one_and_two_hundred_are_valid PASSED [ 38%]
+tests/test_appointment_booking_unit.py::test_tc_w08_reason_length_two_hundred_one_is_rejected FAILED [ 44%]
+tests/test_appointment_booking_unit.py::test_tc_w09_get_doctors_returns_all_seeded_doctors_in_name_order PASSED [ 50%]
+tests/test_appointment_booking_unit.py::test_tc_w10_get_doctors_returns_empty_result_when_table_has_no_rows PASSED [ 55%]
+tests/test_appointment_booking_unit.py::test_tc_w11_create_and_confirmation_join_return_exact_details PASSED [ 61%]
+tests/test_appointment_booking_unit.py::test_tc_w12_confirmation_lookup_returns_none_for_unknown_id PASSED [ 66%]
+tests/test_appointment_booking_unit.py::test_tc_w13_conflict_check_returns_false_when_no_appointment_exists PASSED [ 72%]
+tests/test_appointment_booking_unit.py::test_tc_w14_conflict_check_returns_true_for_same_doctor_date_and_slot PASSED [ 77%]
+tests/test_appointment_booking_unit.py::test_tc_w15_conflict_check_allows_same_doctor_and_slot_on_different_date FAILED [ 83%]
+tests/test_appointment_booking_unit.py::test_tc_w16_conflict_check_allows_different_doctor PASSED [ 88%]
+tests/test_appointment_booking_unit.py::test_tc_w17_unknown_patient_cannot_be_inserted FAILED [ 94%]
+tests/test_appointment_booking_unit.py::test_tc_w18_first_and_last_slot_values_round_trip_through_database PASSED [100%]
+
+================================== FAILURES ===================================
+__ test_tc_w05_date_validation_exercises_required_invalid_and_past_branches ___
+tests\test_appointment_booking_unit.py:117: in test_tc_w05_date_validation_exercises_required_invalid_and_past_branches
+    assert validate(valid_form(appointment_date=yesterday))["appointment_date"] == "Appointment date cannot be in the past."
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'appointment_date'
+____________ test_tc_w08_reason_length_two_hundred_one_is_rejected ____________
+tests\test_appointment_booking_unit.py:134: in test_tc_w08_reason_length_two_hundred_one_is_rejected
+    assert validate(valid_form(reason="R" * 201))["reason"] == "Reason must be 200 characters or fewer."
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'reason'
+__ test_tc_w15_conflict_check_allows_same_doctor_and_slot_on_different_date ___
+tests\test_appointment_booking_unit.py:192: in test_tc_w15_conflict_check_allows_same_doctor_and_slot_on_different_date
+    assert conflict_for_2026_11_03 is False
+E   assert True is False
+_______________ test_tc_w17_unknown_patient_cannot_be_inserted ________________
+tests\test_appointment_booking_unit.py:203: in test_tc_w17_unknown_patient_cannot_be_inserted
+    with pytest.raises((sqlite3.IntegrityError, ValueError)):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE any of (IntegrityError, ValueError)
+=========================== short test summary info ===========================
+FAILED tests/test_appointment_booking_unit.py::test_tc_w05_date_validation_exercises_required_invalid_and_past_branches
+FAILED tests/test_appointment_booking_unit.py::test_tc_w08_reason_length_two_hundred_one_is_rejected
+FAILED tests/test_appointment_booking_unit.py::test_tc_w15_conflict_check_allows_same_doctor_and_slot_on_different_date
+FAILED tests/test_appointment_booking_unit.py::test_tc_w17_unknown_patient_cannot_be_inserted
+======================== 4 failed, 14 passed in 0.95s =========================
