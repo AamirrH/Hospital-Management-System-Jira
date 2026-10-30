@@ -90,6 +90,8 @@ def appointment_slot_taken(
     doctor_id: str,
     time_slot: str,
     db_path: str | Path | None = None,
+    *,
+    appointment_date: str | None = None,
 ) -> bool:
     """Return whether the selected doctor already has the requested slot."""
     with get_db(db_path) as connection:
@@ -97,10 +99,12 @@ def appointment_slot_taken(
             """
             SELECT 1
             FROM appointments
-            WHERE doctor_id = ? AND time_slot = ?
+            WHERE doctor_id = ?
+              AND time_slot = ?
+              AND (? IS NULL OR appointment_date = ?)
             LIMIT 1
             """,
-            (doctor_id, time_slot),
+            (doctor_id, time_slot, appointment_date, appointment_date),
         ).fetchone() is not None
 
 

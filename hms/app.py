@@ -136,7 +136,9 @@ def create_app() -> Flask:
                 today=date.today(),
             )
             if not errors and appointment_slot_taken(
-                form_data["doctor_id"], form_data["time_slot"]
+                form_data["doctor_id"],
+                form_data["time_slot"],
+                appointment_date=form_data["appointment_date"],
             ):
                 errors["time_slot"] = (
                     "This doctor is already booked for the selected date and time."
