@@ -144,7 +144,7 @@ def validate_appointment(
         errors["time_slot"] = "Select a valid time slot."
 
     reason = values["reason"]
-    if len(reason) > 201:
+    if len(reason) > 200:
         errors["reason"] = "Reason must be 200 characters or fewer."
 
     return errors
