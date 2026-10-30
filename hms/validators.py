@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Collection, Mapping
-from datetime import date, timedelta
+from datetime import date
 
 
 NAME_PATTERN = re.compile(r"^[A-Za-z ]+$")
@@ -134,7 +134,7 @@ def validate_appointment(
         except ValueError:
             errors["appointment_date"] = "Enter a valid appointment date."
         else:
-            if selected_date < current_date - timedelta(days=1):
+            if selected_date < current_date:
                 errors["appointment_date"] = "Appointment date cannot be in the past."
 
     time_slot = values["time_slot"]
