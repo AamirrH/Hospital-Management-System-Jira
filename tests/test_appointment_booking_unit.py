@@ -188,7 +188,9 @@ def test_tc_w14_conflict_check_returns_true_for_same_doctor_date_and_slot(appoin
 def test_tc_w15_conflict_check_allows_same_doctor_and_slot_on_different_date(appointment_db):
     """TC-W15: Conflict logic must isolate appointments by date."""
     create_appointment("1", "2", "2026-11-02", "12:00", "", appointment_db)
-    conflict_for_2026_11_03 = appointment_slot_taken("2", "12:00", appointment_db)
+    conflict_for_2026_11_03 = appointment_slot_taken(
+        "2", "12:00", appointment_db, appointment_date="2026-11-03"
+    )
     assert conflict_for_2026_11_03 is False
 
 
