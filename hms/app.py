@@ -152,6 +152,8 @@ def create_app() -> Flask:
                         form_data["reason"],
                     )
                     confirmation = get_appointment_confirmation(appointment_id)
+                except ValueError as error:
+                    errors["patient_id"] = str(error)
                 except sqlite3.DatabaseError:
                     errors["form"] = (
                         "Unable to book the appointment. Please try again."

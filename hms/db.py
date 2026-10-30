@@ -45,6 +45,12 @@ def create_appointment(
 ) -> int:
     """Insert an appointment and return its generated ID."""
     with get_db(db_path) as connection:
+        patient_exists = connection.execute(
+            "SELECT 1 FROM patients WHERE patient_id = ?", (patient_id,)
+        ).fetchone()
+        if patient_exists is None:
+            raise ValueError("Patient not found.")
+
         cursor = connection.execute(
             """
             INSERT INTO appointments (
